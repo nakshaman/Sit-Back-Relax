@@ -1,3 +1,4 @@
+import 'package:appknit/app/data/services/auth_service.dart';
 import 'package:appknit/app/modules/login/services/login_api.dart';
 import 'package:appknit/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -42,25 +43,54 @@ class LoginController extends GetxController {
 
       final response = await LoginApi.login(email: email, password: password);
 
-      debugPrint("LOGIN RESPONSE: $response");
+      // debugPrint("LOGIN RESPONSE: $response");
 
       final body = response["body"];
       final statusCode = response["statusCode"];
 
       Get.closeAllSnackbars(); //  stop stacked snackbars
 
-      // ✅ LOGIN SUCCESS (THIS IS THE ONLY SUCCESS CHECK)
+      //  LOGIN SUCCESS (THIS IS THE ONLY SUCCESS CHECK)
       final accessToken = body?["data"]?["accessToken"];
 
       if (statusCode == 200 && accessToken != null) {
-        debugPrint("ACCESS TOKEN: $accessToken");
+        // debugPrint("ACCESS TOKEN: $accessToken");
+        final accessToken = body?["data"]?["accessToken"];
+        Get.find<AuthService>().saveToken(accessToken);
+        // Sucess snackbar
+        Get.snackbar(
+          "Success",
+          body["message"] ?? "Login successful",
+          backgroundColor: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10,
+            ),
+          ],
+          titleText: Text(
+            'Success',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          messageText: Text(
+            'Login completed successfully',
+            style: TextStyle(
+              color: Colors.grey[700],
+            ),
+          ),
+        );
 
-        Get.snackbar("Success", body["message"] ?? "Login successful");
         Get.offAllNamed(Routes.HOME);
         return;
       }
 
-      // ❌ LOGIN FAILED
+      // LOGIN FAILED
       Get.snackbar(
         "Login Failed",
         body?["message"] ?? "Invalid credentials",

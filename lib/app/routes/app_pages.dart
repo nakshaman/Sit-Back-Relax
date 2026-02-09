@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/addtodo/bindings/addtodo_binding.dart';
+import '../modules/addtodo/views/addtodo_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -36,6 +38,11 @@ class AppPages {
       name: _Paths.SIGNUP,
       page: () => const SignupView(),
       binding: SignupBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADDTODO,
+      page: () => const AddtodoView(),
+      binding: AddtodoBinding(),
     ),
   ];
 }
